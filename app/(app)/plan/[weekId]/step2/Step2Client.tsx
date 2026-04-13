@@ -24,8 +24,8 @@ interface Props {
 
 const CLASSIFICATION_OPTIONS: { value: Classification; label: string; color: string }[] = [
   { value: 'top_priority', label: 'Top 3', color: 'bg-violet-600 text-white' },
-  { value: 'essential', label: 'Essential', color: 'bg-zinc-700 text-zinc-200' },
-  { value: 'not_essential', label: 'Skip', color: 'bg-zinc-800 text-zinc-400' },
+  { value: 'essential', label: 'Esencial', color: 'bg-zinc-700 text-zinc-200' },
+  { value: 'not_essential', label: 'Omitir', color: 'bg-zinc-800 text-zinc-400' },
 ]
 
 export default function Step2Client({ week, items, existingPriorities, areas: _areas }: Props) {
@@ -94,9 +94,9 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
   return (
     <WizardShell
       week={week}
-      stepTitle="Choose the Essential"
+      stepTitle="Elige lo esencial"
       stepNumber={2}
-      stepDescription="Apply the 90% rule: if it's not a clear YES (score > 90), it's a no. Pick max 3 top priorities."
+      stepDescription="Regla del 90%: si no es un SÍ rotundo (puntuación > 90), es un no. Elige máximo 3 prioridades."
     >
       <div className="space-y-3 mb-8">
         {items.map(item => {
@@ -127,18 +127,18 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
                   </button>
                 )}
                 <span className="text-sm text-zinc-200 flex-1">{item.content}</span>
-                {savingId === item.id && <span className="text-xs text-zinc-500">saving…</span>}
+                {savingId === item.id && <span className="text-xs text-zinc-500">guardando…</span>}
               </div>
 
               {/* Score slider */}
               <div className="mb-3">
                 <div className="flex justify-between text-xs text-zinc-500 mb-1">
-                  <span>Score</span>
+                  <span>Puntuación</span>
                   <span className={cn(
                     'font-medium',
                     state.score >= 90 ? 'text-yellow-400' : state.score >= 70 ? 'text-violet-400' : 'text-zinc-400'
                   )}>
-                    {state.score}/100{state.score >= 90 ? ' ✓ YES' : ''}
+                    {state.score}/100{state.score >= 90 ? ' ✓ SÍ' : ''}
                   </span>
                 </div>
                 <input
@@ -173,11 +173,11 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
       {topPriorityItems.length > 0 && (
         <div className="p-4 bg-violet-500/10 border border-violet-500/20 rounded-xl mb-6">
           <p className="text-sm text-violet-300 font-medium mb-2">
-            Top {topPriorityItems.length}/3 priorities selected
+            {topPriorityItems.length}/3 prioridades top seleccionadas
           </p>
           {!numberOneId && (
             <p className="text-xs text-zinc-400">
-              ⭐ Click the star on your most important priority to mark it as #1.
+              ⭐ Haz clic en la estrella de tu prioridad más importante para marcarla como #1.
             </p>
           )}
           {numberOneId && (
@@ -194,14 +194,14 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
           href={`/plan/${week.id}/step1`}
           className="flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-zinc-200 text-sm transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" /> Back
+          <ChevronLeft className="w-4 h-4" /> Atrás
         </Link>
         <button
           onClick={handleContinue}
           disabled={isPending}
           className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors"
         >
-          Continue to Define Actions <ChevronRight className="w-4 h-4" />
+          Continuar a Definir acciones <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </WizardShell>

@@ -49,7 +49,7 @@ export async function completeStep3(weekId: string) {
   if (!user) return { error: 'Unauthorized' }
 
   const { count } = await supabase.from('tasks').select('*', { count: 'exact', head: true }).eq('week_id', weekId)
-  if (!count || count < 1) return { error: 'Define at least one task before continuing.' }
+  if (!count || count < 1) return { error: 'Define al menos una tarea para continuar.' }
 
   const { data: week } = await supabase.from('weeks').select('completed_steps').eq('id', weekId).single()
   const steps = week?.completed_steps ?? []

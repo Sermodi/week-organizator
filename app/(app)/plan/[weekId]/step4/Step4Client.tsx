@@ -63,18 +63,18 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
   const getBlocksForDay = (day: number) => blocks.filter(b => b.day_of_week === day)
 
   return (
-    <WizardShell week={week} stepTitle="Block Your Time" stepNumber={4} stepDescription="Assign tasks to days. Schedule deep work for your #1 priority first.">
+    <WizardShell week={week} stepTitle="Bloquea tu tiempo" stepNumber={4} stepDescription="Asigna tareas a días. Programa trabajo profundo para tu prioridad #1 primero.">
 
       {/* Top priority suggestion */}
       {topTask && !scheduledTaskIds.has(topTask.id) && (
         <div className="flex items-center gap-3 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl mb-6 text-sm">
           <span className="text-yellow-400">⭐</span>
-          <span className="text-zinc-300">Schedule your #1 first: <span className="text-white font-medium">{topTask.action_verb} {topTask.concrete_object}</span></span>
+          <span className="text-zinc-300">Programa tu #1 primero: <span className="text-white font-medium">{topTask.action_verb} {topTask.concrete_object}</span></span>
           <button
             onClick={() => setAdding({ taskId: topTask.id, blockType: 'deep_work' })}
             className="ml-auto text-xs text-yellow-400 hover:text-yellow-300 font-medium"
           >
-            Schedule →
+            Programar →
           </button>
         </div>
       )}
@@ -118,7 +118,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
       {/* Unscheduled tasks */}
       {unscheduledTasks.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-xs text-zinc-500 font-medium mb-2 uppercase tracking-wide">Unscheduled tasks</h3>
+          <h3 className="text-xs text-zinc-500 font-medium mb-2 uppercase tracking-wide">Tareas sin programar</h3>
           <div className="flex flex-wrap gap-2">
             {unscheduledTasks.map(task => {
               const color = task.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#71717a'
@@ -142,25 +142,25 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
       {adding !== null && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-sm font-semibold text-white">Add time block</h3>
+            <h3 className="text-sm font-semibold text-white">Añadir bloque de tiempo</h3>
             <div className="space-y-3">
               {!adding.taskId && (
                 <select
                   onChange={e => setAdding(a => ({ ...a, taskId: e.target.value }))}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white"
                 >
-                  <option value="">Select task (optional)</option>
+                  <option value="">Sin tarea (añade etiqueta abajo)</option>
                   {tasks.map(t => <option key={t.id} value={t.id}>{t.action_verb} {t.concrete_object}</option>)}
                 </select>
               )}
               {adding.taskId && (
                 <p className="text-sm text-zinc-300">
-                  Task: <span className="text-white">{tasks.find(t => t.id === adding.taskId)?.action_verb} {tasks.find(t => t.id === adding.taskId)?.concrete_object}</span>
+                  Tarea: <span className="text-white">{tasks.find(t => t.id === adding.taskId)?.action_verb} {tasks.find(t => t.id === adding.taskId)?.concrete_object}</span>
                 </p>
               )}
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">Day</label>
+                  <label className="text-xs text-zinc-400 mb-1 block">Día</label>
                   <select
                     value={adding.day ?? 0}
                     onChange={e => setAdding(a => ({ ...a, day: Number(e.target.value) }))}
@@ -170,22 +170,22 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">Type</label>
+                  <label className="text-xs text-zinc-400 mb-1 block">Tipo</label>
                   <select
                     value={adding.blockType ?? 'task'}
                     onChange={e => setAdding(a => ({ ...a, blockType: e.target.value as 'task' | 'fixed_commitment' | 'deep_work' | 'buffer' }))}
                     className="w-full px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white"
                   >
-                    <option value="task">Task</option>
-                    <option value="deep_work">Deep Work</option>
-                    <option value="fixed_commitment">Fixed</option>
-                    <option value="buffer">Buffer</option>
+                    <option value="task">Tarea</option>
+                    <option value="deep_work">Trabajo profundo</option>
+                    <option value="fixed_commitment">Compromiso fijo</option>
+                    <option value="buffer">Margen</option>
                   </select>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">Start</label>
+                  <label className="text-xs text-zinc-400 mb-1 block">Inicio</label>
                   <select
                     value={adding.startTime ?? '09:00'}
                     onChange={e => setAdding(a => ({ ...a, startTime: e.target.value }))}
@@ -195,7 +195,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-400 mb-1 block">End</label>
+                  <label className="text-xs text-zinc-400 mb-1 block">Fin</label>
                   <select
                     value={adding.endTime ?? '10:00'}
                     onChange={e => setAdding(a => ({ ...a, endTime: e.target.value }))}
@@ -207,7 +207,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
               </div>
               {!adding.taskId && (
                 <input
-                  placeholder="Label (e.g. Morning standup)"
+                  placeholder="Etiqueta (ej. Reunión de mañana)"
                   value={adding.label ?? ''}
                   onChange={e => setAdding(a => ({ ...a, label: e.target.value }))}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white placeholder-zinc-500"
@@ -216,9 +216,9 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
             </div>
             {error && <p className="text-red-400 text-xs">{error}</p>}
             <div className="flex gap-2 justify-end">
-              <button onClick={() => setAdding(null)} className="px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Cancel</button>
+              <button onClick={() => setAdding(null)} className="px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Cancelar</button>
               <button onClick={handleAddBlock} disabled={isPending} className="px-3 py-1.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm rounded-lg transition-colors">
-                Add block
+                Añadir bloque
               </button>
             </div>
           </div>
@@ -228,10 +228,10 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
       {error && !adding && <p className="text-red-400 text-sm mb-3">{error}</p>}
       <div className="flex justify-between">
         <Link href={`/plan/${week.id}/step3`} className="flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-zinc-200 text-sm transition-colors">
-          <ChevronLeft className="w-4 h-4" /> Back
+          <ChevronLeft className="w-4 h-4" /> Atrás
         </Link>
         <button onClick={handleContinue} disabled={isPending} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors">
-          Continue to Reflection <ChevronRight className="w-4 h-4" />
+          Continuar a Reflexión <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </WizardShell>

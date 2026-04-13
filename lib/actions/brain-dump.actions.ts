@@ -65,7 +65,7 @@ export async function completeStep1(weekId: string) {
     .from('brain_dump_items')
     .select('*', { count: 'exact', head: true })
     .eq('week_id', weekId)
-  if (!count || count < 1) return { error: 'Add at least one item before continuing.' }
+  if (!count || count < 1) return { error: 'Añade al menos un elemento para continuar.' }
 
   const { data: week } = await supabase
     .from('weeks').select('completed_steps').eq('id', weekId).single()

@@ -5,11 +5,11 @@ import { getWeekStartString, formatWeekRange } from '@/lib/utils/week'
 import { ArrowRight, CheckCircle2, Circle } from 'lucide-react'
 
 const STEP_LABELS = [
-  'Brain Dump',
-  'Prioritize',
-  'Define Actions',
-  'Time Blocking',
-  'Reflection',
+  'Volcado mental',
+  'Priorizar',
+  'Definir acciones',
+  'Bloqueo de tiempo',
+  'Reflexión',
 ]
 
 export default async function DashboardPage() {
@@ -32,12 +32,12 @@ export default async function DashboardPage() {
   return (
     <div className="p-8 max-w-2xl">
       <div className="mb-8">
-        <p className="text-zinc-500 text-sm mb-1">Current week</p>
+        <p className="text-zinc-500 text-sm mb-1">Semana actual</p>
         <h1 className="text-2xl font-semibold text-white">{formatWeekRange(weekStart)}</h1>
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-4">
-        <h2 className="text-sm font-medium text-zinc-400 mb-4">Planning Progress</h2>
+        <h2 className="text-sm font-medium text-zinc-400 mb-4">Progreso de planificación</h2>
         <div className="space-y-3">
           {STEP_LABELS.map((label, i) => {
             const stepNum = i + 1
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
                   {label}
                 </span>
                 {current && (
-                  <span className="ml-auto text-xs text-violet-400 font-medium">Current</span>
+                  <span className="ml-auto text-xs text-violet-400 font-medium">Actual</span>
                 )}
               </div>
             )
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
         href={`/plan/${week?.id}/step${week?.current_step ?? 1}`}
         className="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium rounded-lg transition-colors"
       >
-        {week?.current_step === 1 ? 'Start Planning' : 'Continue Planning'}
+        {week?.current_step === 1 ? 'Empezar planificación' : 'Continuar planificación'}
         <ArrowRight className="w-4 h-4" />
       </Link>
     </div>

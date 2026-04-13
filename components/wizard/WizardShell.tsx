@@ -3,11 +3,11 @@ import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const STEPS = [
-  { num: 1, label: 'Capture' },
-  { num: 2, label: 'Prioritize' },
-  { num: 3, label: 'Define' },
-  { num: 4, label: 'Schedule' },
-  { num: 5, label: 'Reflect' },
+  { num: 1, label: 'Capturar' },
+  { num: 2, label: 'Priorizar' },
+  { num: 3, label: 'Definir' },
+  { num: 4, label: 'Planificar' },
+  { num: 5, label: 'Reflexionar' },
 ]
 
 interface Props {
@@ -49,7 +49,7 @@ export function WizardShell({ week, stepNumber, stepTitle, stepDescription, chil
 
       {/* Step header */}
       <div className="mb-6">
-        <div className="text-xs text-violet-400 font-medium mb-1">Step {stepNumber} of 5</div>
+        <div className="text-xs text-violet-400 font-medium mb-1">Paso {stepNumber} de 5</div>
         <h1 className="text-2xl font-semibold text-white mb-2">{stepTitle}</h1>
         <p className="text-zinc-400 text-sm">{stepDescription}</p>
       </div>

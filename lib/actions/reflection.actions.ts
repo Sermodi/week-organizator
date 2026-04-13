@@ -36,7 +36,7 @@ export async function completeStep5(weekId: string) {
 
   const { data: reflection } = await supabase.from('reflections').select('*').eq('week_id', weekId).single()
   if (!reflection?.what_worked || !reflection?.what_didnt || !reflection?.what_to_change) {
-    return { error: 'Fill in all three reflection fields before finishing.' }
+    return { error: 'Rellena los tres campos de reflexión para finalizar.' }
   }
 
   const { data: week } = await supabase.from('weeks').select('completed_steps').eq('id', weekId).single()

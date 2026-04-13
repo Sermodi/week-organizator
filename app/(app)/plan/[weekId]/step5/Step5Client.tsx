@@ -16,18 +16,18 @@ interface Props {
 const FIELDS = [
   {
     key: 'what_worked' as const,
-    label: '✅ What worked?',
-    placeholder: 'What went well this week? What habits, systems, or actions contributed most?',
+    label: '✅ ¿Qué ha funcionado?',
+    placeholder: '¿Qué fue bien esta semana? ¿Qué hábitos, sistemas o acciones contribuyeron más?',
   },
   {
     key: 'what_didnt' as const,
-    label: "❌ What didn't work?",
-    placeholder: 'Where did the plan break down? What caused distraction or failure?',
+    label: '❌ ¿Qué no ha funcionado?',
+    placeholder: '¿Dónde falló el plan? ¿Qué causó distracción o falta de foco?',
   },
   {
     key: 'what_to_change' as const,
-    label: '🔄 What would you change?',
-    placeholder: 'One specific adjustment for next week to improve your results.',
+    label: '🔄 ¿Qué cambiarías?',
+    placeholder: 'Un ajuste concreto para la próxima semana que mejore tus resultados.',
   },
 ]
 
@@ -66,19 +66,19 @@ export default function Step5Client({ week, reflection, taskCount, blockCount }:
   return (
     <WizardShell
       week={week}
-      stepTitle="Weekly Reflection"
+      stepTitle="Reflexión semanal"
       stepNumber={5}
-      stepDescription="20 minutes to review what happened and improve next week."
+      stepDescription="20 minutos para revisar lo que pasó y mejorar la próxima semana."
     >
       {/* Week summary */}
       <div className="grid grid-cols-2 gap-3 mb-6">
         <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-center">
           <p className="text-2xl font-bold text-violet-400">{taskCount}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">Tasks defined</p>
+          <p className="text-xs text-zinc-500 mt-0.5">Tareas definidas</p>
         </div>
         <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-center">
           <p className="text-2xl font-bold text-violet-400">{blockCount}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">Time blocks scheduled</p>
+          <p className="text-xs text-zinc-500 mt-0.5">Bloques programados</p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default function Step5Client({ week, reflection, taskCount, blockCount }:
 
       {/* Star rating */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-zinc-300 mb-2">How was this week overall?</label>
+        <label className="block text-sm font-medium text-zinc-300 mb-2">¿Cómo fue la semana en general?</label>
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map(rating => (
             <button
@@ -121,7 +121,7 @@ export default function Step5Client({ week, reflection, taskCount, blockCount }:
 
       {saved && (
         <div className="flex items-center gap-1.5 text-xs text-green-400 mb-3">
-          <CheckCircle2 className="w-3.5 h-3.5" /> Saved
+          <CheckCircle2 className="w-3.5 h-3.5" /> Guardado
         </div>
       )}
 
@@ -132,14 +132,14 @@ export default function Step5Client({ week, reflection, taskCount, blockCount }:
           href={`/plan/${week.id}/step4`}
           className="flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-zinc-200 text-sm transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" /> Back
+          <ChevronLeft className="w-4 h-4" /> Atrás
         </Link>
         <button
           onClick={handleFinish}
           disabled={isPending}
           className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors"
         >
-          <CheckCircle2 className="w-4 h-4" /> Finish Week
+          <CheckCircle2 className="w-4 h-4" /> Finalizar semana
         </button>
       </div>
     </WizardShell>

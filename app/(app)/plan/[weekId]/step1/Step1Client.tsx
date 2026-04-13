@@ -69,29 +69,29 @@ export default function Step1Client({ week, items, areas }: Props) {
   return (
     <WizardShell
       week={week}
-      stepTitle="Brain Dump"
+      stepTitle="Volcado mental"
       stepNumber={1}
-      stepDescription="Write everything on your mind — no filter, no order. Just capture it all."
+      stepDescription="Escribe todo lo que tienes en la cabeza — sin filtro, sin orden. Solo captura."
     >
       {/* Timer */}
       <div className="flex items-center gap-3 p-4 bg-zinc-900 border border-zinc-800 rounded-xl mb-6">
         <div className="flex items-center gap-2 text-zinc-400">
           <Timer className="w-4 h-4" />
-          <span className="text-sm">20-minute focus timer</span>
+          <span className="text-sm">Temporizador de 20 minutos</span>
         </div>
         {timerSeconds !== null ? (
           <span className={cn(
             'ml-auto font-mono text-sm font-medium',
             timerSeconds === 0 ? 'text-green-400' : timerRunning ? 'text-violet-400' : 'text-zinc-400'
           )}>
-            {timerSeconds === 0 ? 'Done! ✓' : formatTime(timerSeconds)}
+            {timerSeconds === 0 ? '¡Hecho! ✓' : formatTime(timerSeconds)}
           </span>
         ) : (
           <button
             onClick={startTimer}
             className="ml-auto text-xs text-violet-400 hover:text-violet-300 transition-colors"
           >
-            Start timer
+            Iniciar
           </button>
         )}
       </div>
@@ -108,7 +108,7 @@ export default function Step1Client({ week, items, areas }: Props) {
       >
         <input
           name="content"
-          placeholder="What's on your mind?"
+          placeholder="¿Qué tienes en la cabeza?"
           required
           className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
@@ -124,7 +124,7 @@ export default function Step1Client({ week, items, areas }: Props) {
       <div className="space-y-2 mb-8">
         {items.length === 0 && (
           <p className="text-zinc-500 text-sm text-center py-8">
-            Start typing above to capture your first thought.
+            Empieza a escribir para capturar tu primer pensamiento.
           </p>
         )}
         {items.map(item => (
@@ -149,7 +149,7 @@ export default function Step1Client({ week, items, areas }: Props) {
                 }}
                 className="opacity-0 group-hover:opacity-100 text-xs bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-zinc-300 transition-opacity"
               >
-                <option value="">No area</option>
+                <option value="">Sin área</option>
                 {areas.map(a => (
                   <option key={a.id} value={a.id}>{a.name}</option>
                 ))}
@@ -169,14 +169,14 @@ export default function Step1Client({ week, items, areas }: Props) {
       {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
       <div className="flex justify-between items-center">
         <span className="text-zinc-500 text-sm">
-          {items.length} item{items.length !== 1 ? 's' : ''} captured
+          {items.length} elemento{items.length !== 1 ? 's' : ''} capturado{items.length !== 1 ? 's' : ''}
         </span>
         <button
           onClick={handleContinue}
           disabled={isPending || items.length === 0}
           className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors"
         >
-          Continue to Prioritize <ChevronRight className="w-4 h-4" />
+          Continuar a Priorizar <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </WizardShell>

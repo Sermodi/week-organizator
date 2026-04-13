@@ -12,8 +12,8 @@ export default async function AreasPage() {
   return (
     <div className="p-8 max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white">Areas</h1>
-        <p className="text-zinc-400 text-sm mt-1">Categories that persist across all your weeks.</p>
+        <h1 className="text-2xl font-semibold text-white">Áreas</h1>
+        <p className="text-zinc-400 text-sm mt-1">Categorías que se mantienen entre semanas.</p>
       </div>
       <AreasClient areas={areas ?? []} />
     </div>

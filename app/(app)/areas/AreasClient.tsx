@@ -55,7 +55,7 @@ export default function AreasClient({ areas }: Props) {
     <div>
       {/* Add area form */}
       <form action={(fd) => { fd.append('color', selectedColor); action(fd) }} className="flex gap-2 mb-6">
-        <input name="name" required placeholder="New area name…" className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500" />
+        <input name="name" required placeholder="Nombre del área…" className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500" />
         <div className="flex items-center gap-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg">
           {PRESET_COLORS.map(c => (
             <button type="button" key={c} onClick={() => setSelectedColor(c)} className={`w-4 h-4 rounded-full transition-transform ${c === selectedColor ? 'scale-125' : ''}`} style={{ backgroundColor: c }} />
@@ -69,7 +69,7 @@ export default function AreasClient({ areas }: Props) {
 
       {/* Areas list */}
       <div className="space-y-2">
-        {areas.length === 0 && <p className="text-zinc-500 text-sm text-center py-8">No areas yet. Create one to organize your tasks.</p>}
+        {areas.length === 0 && <p className="text-zinc-500 text-sm text-center py-8">Sin áreas. Crea una para organizar tus tareas.</p>}
         {areas.map(area => <AreaRow key={area.id} area={area} />)}
       </div>
     </div>

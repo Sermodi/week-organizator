@@ -54,10 +54,10 @@ export async function completeStep2(weekId: string) {
     .eq('week_id', weekId)
     .not('classification', 'is', null)
 
-  if (!priorities?.length) return { error: 'Classify at least one priority before continuing.' }
+  if (!priorities?.length) return { error: 'Clasifica al menos una prioridad para continuar.' }
 
   const hasNumberOne = priorities.some(p => p.is_number_one)
-  if (!hasNumberOne) return { error: 'Select your #1 priority before continuing.' }
+  if (!hasNumberOne) return { error: 'Selecciona tu prioridad #1 para continuar.' }
 
   const { data: week } = await supabase.from('weeks').select('completed_steps').eq('id', weekId).single()
   const steps: number[] = week?.completed_steps ?? []

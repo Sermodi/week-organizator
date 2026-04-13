@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils'
 import { logout } from '@/lib/actions/auth.actions'
 
 const navItems = [
-  { href: '/dashboard', icon: Sparkles, label: 'This Week' },
-  { href: '/areas', icon: Layers, label: 'Areas' },
-  { href: '/history', icon: History, label: 'History' },
-  { href: '/settings', icon: Settings, label: 'Settings' },
+  { href: '/dashboard', icon: Sparkles, label: 'Esta semana' },
+  { href: '/areas', icon: Layers, label: 'Áreas' },
+  { href: '/history', icon: History, label: 'Historial' },
+  { href: '/settings', icon: Settings, label: 'Ajustes' },
 ]
 
 export function Sidebar() {
@@ -48,7 +48,7 @@ export function Sidebar() {
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Sign out
+            Cerrar sesión
           </button>
         </form>
       </div>

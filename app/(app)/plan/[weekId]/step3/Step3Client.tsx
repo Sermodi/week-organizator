@@ -9,7 +9,7 @@ import type { PriorityLevel } from '@/types'
 import { WizardShell } from '@/components/wizard/WizardShell'
 import Link from 'next/link'
 
-const VERB_SUGGESTIONS = ['Write', 'Build', 'Review', 'Research', 'Design', 'Prepare', 'Finish', 'Send', 'Call', 'Fix', 'Plan', 'Create']
+const VERB_SUGGESTIONS = ['Escribir', 'Construir', 'Revisar', 'Investigar', 'Diseñar', 'Preparar', 'Terminar', 'Enviar', 'Llamar', 'Arreglar', 'Planificar', 'Crear']
 
 interface TaskFormState {
   action_verb: string
@@ -60,7 +60,7 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
           <input
             value={form.action_verb}
             onChange={e => setForm(f => ({ ...f, action_verb: e.target.value }))}
-            placeholder="Action verb (Write, Build…)"
+            placeholder="Verbo de acción (Escribir, Crear…)"
             list="verb-suggestions"
             className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
           />
@@ -72,18 +72,18 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
           <input
             value={form.concrete_object}
             onChange={e => setForm(f => ({ ...f, concrete_object: e.target.value }))}
-            placeholder="…what exactly?"
+            placeholder="…¿qué exactamente?"
             className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
           />
         </div>
       </div>
       {form.action_verb && form.concrete_object && (
-        <p className="text-xs text-zinc-400 italic">Preview: &quot;<span className="text-zinc-200">{form.action_verb} {form.concrete_object}</span>&quot;</p>
+        <p className="text-xs text-zinc-400 italic">Vista previa: &quot;<span className="text-zinc-200">{form.action_verb} {form.concrete_object}</span>&quot;</p>
       )}
       <textarea
         value={form.victory_condition}
         onChange={e => setForm(f => ({ ...f, victory_condition: e.target.value }))}
-        placeholder="Done when… (be specific)"
+        placeholder="Listo cuando… (sé específico)"
         rows={2}
         className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500 resize-none"
       />
@@ -93,7 +93,7 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
         disabled={isPending || !form.action_verb || !form.concrete_object || form.victory_condition.length < 10}
         className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-xs font-medium rounded-lg transition-colors"
       >
-        <Plus className="w-3.5 h-3.5" /> Add task
+        <Plus className="w-3.5 h-3.5" /> Añadir tarea
       </button>
     </div>
   )
@@ -114,7 +114,7 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
   }
 
   return (
-    <WizardShell week={week} stepTitle="Define Concrete Actions" stepNumber={3} stepDescription="For each priority, define exactly what you'll do. Verb + object + done condition.">
+    <WizardShell week={week} stepTitle="Define acciones concretas" stepNumber={3} stepDescription="Para cada prioridad, define exactamente qué harás. Verbo + objeto + condición de éxito.">
 
       <div className="space-y-3 mb-8">
         {priorities.map(priority => {
@@ -135,7 +135,7 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
                     {priority.is_number_one && <span className="text-xs text-yellow-400 font-medium">⭐ #1</span>}
                     <span className="text-sm font-medium text-zinc-200">{priority.title}</span>
                   </div>
-                  <span className="text-xs text-zinc-500">{relatedTasks.length} task{relatedTasks.length !== 1 ? 's' : ''} defined</span>
+                  <span className="text-xs text-zinc-500">{relatedTasks.length} tarea{relatedTasks.length !== 1 ? 's' : ''} definida{relatedTasks.length !== 1 ? 's' : ''}</span>
                 </div>
                 {relatedTasks.length > 0 && <CheckCircle2 className="w-4 h-4 text-violet-400 shrink-0" />}
               </button>
@@ -146,7 +146,7 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
                     <div key={task.id} className="flex items-start gap-2 py-2 border-t border-zinc-800/50">
                       <div className="flex-1">
                         <p className="text-sm text-zinc-200 font-medium">{task.action_verb} {task.concrete_object}</p>
-                        <p className="text-xs text-zinc-500 mt-0.5">Done when: {task.victory_condition}</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Listo cuando: {task.victory_condition}</p>
                       </div>
                       <button
                         onClick={async () => { await deleteTask(task.id, week.id) }}
@@ -164,17 +164,17 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
         })}
 
         {priorities.length === 0 && (
-          <p className="text-zinc-500 text-sm text-center py-8">No priorities defined. Go back to Step 2 to classify your items.</p>
+          <p className="text-zinc-500 text-sm text-center py-8">Sin prioridades. Vuelve al Paso 2 para clasificar tus elementos.</p>
         )}
       </div>
 
       {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
       <div className="flex justify-between">
         <Link href={`/plan/${week.id}/step2`} className="flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-zinc-200 text-sm transition-colors">
-          <ChevronLeft className="w-4 h-4" /> Back
+          <ChevronLeft className="w-4 h-4" /> Atrás
         </Link>
         <button onClick={handleContinue} disabled={isPending} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors">
-          Continue to Schedule <ChevronRight className="w-4 h-4" />
+          Continuar a Planificar <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </WizardShell>

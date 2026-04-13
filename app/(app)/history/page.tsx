@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { formatWeekRange } from '@/lib/utils/week'
 import { CheckCircle2, Circle, ChevronRight } from 'lucide-react'
 
-const STEP_LABELS = ['Capture', 'Prioritize', 'Define', 'Schedule', 'Reflect']
+const STEP_LABELS = ['Capturar', 'Priorizar', 'Definir', 'Planificar', 'Reflexionar']
 
 export default async function HistoryPage() {
   const supabase = await createClient()
@@ -21,12 +21,12 @@ export default async function HistoryPage() {
   return (
     <div className="p-8 max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white">History</h1>
-        <p className="text-zinc-400 text-sm mt-1">All your planning weeks.</p>
+        <h1 className="text-2xl font-semibold text-white">Historial</h1>
+        <p className="text-zinc-400 text-sm mt-1">Todas tus semanas de planificación.</p>
       </div>
 
       <div className="space-y-3">
-        {!weeks?.length && <p className="text-zinc-500 text-sm text-center py-8">No past weeks yet.</p>}
+        {!weeks?.length && <p className="text-zinc-500 text-sm text-center py-8">Aún no hay semanas anteriores.</p>}
         {weeks?.map(week => {
           const reflection = Array.isArray(week.reflections) ? week.reflections[0] : week.reflections
           return (
@@ -39,7 +39,7 @@ export default async function HistoryPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm font-medium text-white">{formatWeekRange(week.week_start)}</p>
                   {week.status === 'completed' && (
-                    <span className="text-xs px-2 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">Completed</span>
+                    <span className="text-xs px-2 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">Completada</span>
                   )}
                 </div>
                 <div className="flex gap-1">
