@@ -1,0 +1,118 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "agents": {
+    "LEADER": {
+      "role": "Coordinator and reviewer. Does not write feature code.",
+      "owns": [".claude/CLAUDE.md", "types/index.ts", "next.config.ts"],
+      "reviews": ["all"]
+    },
+    "DB": {
+      "role": "Database schema, migrations, RLS, generated types",
+      "owns": [
+        "supabase/migrations/",
+        "lib/supabase/client.ts",
+        "lib/supabase/server.ts",
+        "lib/supabase/middleware.ts",
+        "lib/supabase/types.ts",
+        "types/database.ts"
+      ]
+    },
+    "AUTH": {
+      "role": "Supabase Auth integration, middleware, login flow",
+      "owns": [
+        "middleware.ts",
+        "app/(auth)/",
+        "app/auth/callback/route.ts",
+        "components/auth/"
+      ]
+    },
+    "UI": {
+      "role": "Design system, layout components, wizard shell",
+      "owns": [
+        "app/globals.css",
+        "components.json",
+        "components/ui/",
+        "components/layout/",
+        "components/shared/",
+        "components/wizard/"
+      ]
+    },
+    "FEATURES_STEP1": {
+      "role": "Brain Dump step — capture + timer + area assignment",
+      "owns": [
+        "app/(app)/plan/[weekId]/step1/",
+        "components/steps/step1/",
+        "lib/actions/brain-dump.actions.ts",
+        "lib/hooks/useBrainDump.ts",
+        "lib/validations/brain-dump.schema.ts"
+      ]
+    },
+    "FEATURES_STEP2": {
+      "role": "Prioritization step — scoring 0-100, top 3, #1 priority",
+      "owns": [
+        "app/(app)/plan/[weekId]/step2/",
+        "components/steps/step2/",
+        "lib/actions/priority.actions.ts",
+        "lib/hooks/usePriorities.ts",
+        "lib/validations/priority.schema.ts"
+      ]
+    },
+    "FEATURES_STEP3": {
+      "role": "Define Actions step — verb + object + victory condition",
+      "owns": [
+        "app/(app)/plan/[weekId]/step3/",
+        "components/steps/step3/",
+        "lib/actions/task.actions.ts",
+        "lib/hooks/useTasks.ts",
+        "lib/validations/task.schema.ts"
+      ]
+    },
+    "FEATURES_STEP4": {
+      "role": "Time Blocking step — weekly calendar drag-and-drop",
+      "owns": [
+        "app/(app)/plan/[weekId]/step4/",
+        "components/steps/step4/",
+        "lib/actions/time-block.actions.ts",
+        "lib/hooks/useTimeBlocks.ts"
+      ]
+    },
+    "FEATURES_STEP5": {
+      "role": "Reflection step — what worked, what didn't, what to change",
+      "owns": [
+        "app/(app)/plan/[weekId]/step5/",
+        "components/steps/step5/",
+        "lib/actions/reflection.actions.ts",
+        "lib/hooks/useReflection.ts"
+      ]
+    },
+    "FEATURES_AREAS": {
+      "role": "Areas management — CRUD, colors, persistence across weeks",
+      "owns": [
+        "app/(app)/areas/",
+        "components/areas/",
+        "lib/actions/area.actions.ts",
+        "lib/hooks/useAreas.ts",
+        "lib/validations/area.schema.ts"
+      ]
+    }
+  },
+  "conventions": {
+    "typescript": "strict",
+    "imports": "absolute (@/ alias)",
+    "mutations": "server-actions-only",
+    "styling": "tailwind-only",
+    "validation": "zod-on-all-server-action-inputs"
+  },
+  "tools": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(git:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)"
+    ]
+  }
+}
