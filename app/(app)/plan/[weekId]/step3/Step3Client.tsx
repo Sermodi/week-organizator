@@ -1,5 +1,5 @@
 'use client'
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { ChevronRight, ChevronLeft, Plus, Trash2, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createTask, deleteTask, completeStep3 } from '@/lib/actions/task.actions'
@@ -9,7 +9,16 @@ import type { PriorityLevel } from '@/types'
 import { WizardShell } from '@/components/wizard/WizardShell'
 import Link from 'next/link'
 
-const VERB_SUGGESTIONS = ['Escribir', 'Construir', 'Revisar', 'Investigar', 'Diseñar', 'Preparar', 'Terminar', 'Enviar', 'Llamar', 'Arreglar', 'Planificar', 'Crear']
+const DEFAULT_VERBS = ['Escribir', 'Construir', 'Revisar', 'Investigar', 'Diseñar', 'Preparar', 'Terminar', 'Enviar', 'Llamar', 'Arreglar', 'Planificar', 'Crear']
+const STORAGE_KEY = 'wo_custom_verbs'
+
+function loadCustomVerbs(): string[] {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') } catch { return [] }
+}
+function saveCustomVerb(verb: string) {
+  const existing = loadCustomVerbs()
+  if (!existing.includes(verb)) localStorage.setItem(STORAGE_KEY, JSON.stringify([...existing, verb]))
+}
 
 interface TaskFormState {
   action_verb: string
@@ -28,6 +37,12 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
   const [form, setForm] = useState<TaskFormState>({ action_verb: '', concrete_object: '', victory_condition: '' })
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [verbSuggestions, setVerbSuggestions] = useState<string[]>(DEFAULT_VERBS)
+
+  useEffect(() => {
+    const custom = loadCustomVerbs()
+    if (custom.length) setVerbSuggestions([...DEFAULT_VERBS, ...custom.filter(v => !DEFAULT_VERBS.includes(v))])
+  }, [])
 
   const priorityLevel: PriorityLevel = priority.score ? scoreToPriorityLevel(priority.score) : 'medium'
   const color = PRIORITY_COLORS[priorityLevel]
@@ -46,6 +61,10 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
       if (result?.error) {
         setError(result.error)
       } else {
+        if (form.action_verb && !DEFAULT_VERBS.includes(form.action_verb)) {
+          saveCustomVerb(form.action_verb)
+          setVerbSuggestions(prev => prev.includes(form.action_verb) ? prev : [...prev, form.action_verb])
+        }
         setForm({ action_verb: '', concrete_object: '', victory_condition: '' })
         setError(null)
         onCreated()
@@ -65,7 +84,7 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
             className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
           />
           <datalist id="verb-suggestions">
-            {VERB_SUGGESTIONS.map(v => <option key={v} value={v} />)}
+            {verbSuggestions.map(v => <option key={v} value={v} />)}
           </datalist>
         </div>
         <div className="flex-[2]">
