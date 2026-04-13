@@ -22,14 +22,36 @@ export async function upsertPriority(data: z.infer<typeof UpsertPrioritySchema>)
   const parsed = UpsertPrioritySchema.safeParse(data)
   if (!parsed.success) return { error: 'Invalid input' }
 
-  const { data: upserted, error } = await supabase.from('priorities').upsert({
-    ...parsed.data,
-    user_id: user.id,
-  }, { onConflict: 'week_id,brain_dump_item_id' }).select('id').single()
+  // Check if row already exists
+  const { data: existing } = await supabase
+    .from('priorities')
+    .select('id')
+    .eq('week_id', parsed.data.week_id)
+    .eq('brain_dump_item_id', parsed.data.brain_dump_item_id)
+    .eq('user_id', user.id)
+    .maybeSingle()
 
-  if (error) return { error: error.message }
+  let rowId: string
+
+  if (existing?.id) {
+    const { error } = await supabase
+      .from('priorities')
+      .update({ ...parsed.data, user_id: user.id })
+      .eq('id', existing.id)
+    if (error) return { error: error.message }
+    rowId = existing.id
+  } else {
+    const { data: inserted, error } = await supabase
+      .from('priorities')
+      .insert({ ...parsed.data, user_id: user.id })
+      .select('id')
+      .single()
+    if (error) return { error: error.message }
+    rowId = inserted.id
+  }
+
   revalidatePath(`/plan/${parsed.data.week_id}/step2`)
-  return { id: upserted.id as string }
+  return { id: rowId }
 }
 
 export async function setNumberOnePriority(priorityId: string, weekId: string) {
