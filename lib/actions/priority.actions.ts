@@ -22,14 +22,14 @@ export async function upsertPriority(data: z.infer<typeof UpsertPrioritySchema>)
   const parsed = UpsertPrioritySchema.safeParse(data)
   if (!parsed.success) return { error: 'Invalid input' }
 
-  const { data, error } = await supabase.from('priorities').upsert({
+  const { data: upserted, error } = await supabase.from('priorities').upsert({
     ...parsed.data,
     user_id: user.id,
   }, { onConflict: 'week_id,brain_dump_item_id' }).select('id').single()
 
   if (error) return { error: error.message }
   revalidatePath(`/plan/${parsed.data.week_id}/step2`)
-  return { id: data.id as string }
+  return { id: upserted.id as string }
 }
 
 export async function setNumberOnePriority(priorityId: string, weekId: string) {
