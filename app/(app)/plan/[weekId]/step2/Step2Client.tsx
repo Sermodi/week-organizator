@@ -56,7 +56,7 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
     setStates(s => ({ ...s, [itemId]: next }))
     setSavingId(itemId)
     startTransition(async () => {
-      await upsertPriority({
+      const result = await upsertPriority({
         week_id: week.id,
         brain_dump_item_id: itemId,
         title: item.content,
@@ -65,6 +65,9 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
         classification: next.classification ?? undefined,
         is_number_one: next.is_number_one,
       })
+      if (result && 'id' in result) {
+        setStates(s => ({ ...s, [itemId]: { ...s[itemId], id: result.id } }))
+      }
       setSavingId(null)
     })
   }, [items, states, week.id])
