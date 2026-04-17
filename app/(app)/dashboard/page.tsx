@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getWeekStartString, formatWeekRange } from '@/lib/utils/week'
+import { addDays, format, startOfISOWeek } from 'date-fns'
 import { ArrowRight, CheckCircle2, Circle } from 'lucide-react'
 
 const STEP_LABELS = [
@@ -18,16 +19,18 @@ export default async function DashboardPage() {
   if (!user) redirect('/login')
 
   const weekStart = getWeekStartString()
+  const nextWeekStart = format(addDays(startOfISOWeek(new Date()), 7), 'yyyy-MM-dd')
 
-  // Get or create current week
-  const { data: weekData } = await supabase
-    .rpc('get_or_create_week', { p_user_id: user.id, p_week_start: weekStart })
+  // Get or create current and next week in parallel
+  const [{ data: weekData }, { data: nextWeekData }] = await Promise.all([
+    supabase.rpc('get_or_create_week', { p_user_id: user.id, p_week_start: weekStart }),
+    supabase.rpc('get_or_create_week', { p_user_id: user.id, p_week_start: nextWeekStart }),
+  ])
 
-  const { data: week } = await supabase
-    .from('weeks')
-    .select('*')
-    .eq('id', weekData)
-    .single()
+  const [{ data: week }, { data: nextWeek }] = await Promise.all([
+    supabase.from('weeks').select('*').eq('id', weekData).single(),
+    supabase.from('weeks').select('*').eq('id', nextWeekData).single(),
+  ])
 
   return (
     <div className="p-8 max-w-2xl">
@@ -69,6 +72,44 @@ export default async function DashboardPage() {
         {week?.current_step === 1 ? 'Empezar planificación' : 'Continuar planificación'}
         <ArrowRight className="w-4 h-4" />
       </Link>
+
+      {/* Next week */}
+      <div className="mt-10">
+        <p className="text-zinc-500 text-sm mb-1">Semana siguiente</p>
+        <h2 className="text-lg font-semibold text-white mb-4">{formatWeekRange(nextWeekStart)}</h2>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-4">
+          <h3 className="text-sm font-medium text-zinc-400 mb-4">Progreso de planificación</h3>
+          <div className="space-y-3">
+            {STEP_LABELS.map((label, i) => {
+              const stepNum = i + 1
+              const done = nextWeek?.completed_steps?.includes(stepNum)
+              const current = nextWeek?.current_step === stepNum
+              return (
+                <div key={stepNum} className="flex items-center gap-3">
+                  {done ? (
+                    <CheckCircle2 className="w-4 h-4 text-violet-400 shrink-0" />
+                  ) : (
+                    <Circle className={`w-4 h-4 shrink-0 ${current ? 'text-violet-400' : 'text-zinc-600'}`} />
+                  )}
+                  <span className={`text-sm ${done ? 'text-zinc-400 line-through' : current ? 'text-white' : 'text-zinc-500'}`}>
+                    {label}
+                  </span>
+                  {current && (
+                    <span className="ml-auto text-xs text-violet-400 font-medium">Actual</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+        <Link
+          href={`/plan/${nextWeek?.id}/step${nextWeek?.current_step ?? 1}`}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium rounded-lg transition-colors border border-zinc-700"
+        >
+          {nextWeek?.current_step === 1 ? 'Empezar planificación' : 'Continuar planificación'}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
     </div>
   )
 }
