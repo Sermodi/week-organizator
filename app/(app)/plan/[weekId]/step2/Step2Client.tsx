@@ -129,8 +129,18 @@ export default function Step2Client({ week, items, existingPriorities, areas: _a
                     <Star className="w-4 h-4" fill={isNumberOne ? 'currentColor' : 'none'} />
                   </button>
                 )}
-                <span className="text-sm text-zinc-200 flex-1">{item.content}</span>
-                {savingId === item.id && <span className="text-xs text-zinc-500">guardando…</span>}
+                <div className="flex-1 flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-zinc-200">{item.content}</span>
+                  {item.area && (
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full shrink-0"
+                      style={{ backgroundColor: item.area.color + '33', color: item.area.color }}
+                    >
+                      {item.area.name}
+                    </span>
+                  )}
+                </div>
+                {savingId === item.id && <span className="text-xs text-zinc-500 shrink-0">guardando…</span>}
               </div>
 
               {/* Score slider */}
