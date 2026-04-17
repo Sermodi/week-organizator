@@ -1,6 +1,6 @@
 'use client'
 import { useState, useTransition } from 'react'
-import { ChevronRight, ChevronLeft, Plus, X, Clock } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Plus, X, Clock, Download } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createTimeBlock, deleteTimeBlock, completeStep4 } from '@/lib/actions/time-block.actions'
 import { PRIORITY_COLORS } from '@/lib/utils/priority'
@@ -292,13 +292,24 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
       )}
 
       {error && !adding && <p className="text-red-400 text-sm mb-3">{error}</p>}
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <Link href={`/plan/${week.id}/step3`} className="flex items-center gap-1 px-3 py-2 text-zinc-400 hover:text-zinc-200 text-sm transition-colors">
           <ChevronLeft className="w-4 h-4" /> Atrás
         </Link>
-        <button onClick={handleContinue} disabled={isPending} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors">
-          Continuar a Reflexión <ChevronRight className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-3">
+          {blocks.length > 0 && (
+            <a
+              href={`/plan/${week.id}/export-ics`}
+              download
+              className="flex items-center gap-1.5 px-3 py-2 text-zinc-400 hover:text-zinc-200 border border-zinc-700 hover:border-zinc-500 text-sm rounded-lg transition-colors"
+            >
+              <Download className="w-4 h-4" /> Exportar .ics
+            </a>
+          )}
+          <button onClick={handleContinue} disabled={isPending} className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors">
+            Continuar a Reflexión <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </WizardShell>
   )
