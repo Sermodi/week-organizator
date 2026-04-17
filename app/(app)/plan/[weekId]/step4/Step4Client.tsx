@@ -60,7 +60,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
     })
   }
 
-  const getBlocksForDay = (day: number) => blocks.filter(b => b.day_of_week === day)
+  const getBlocksForDay = (day: number) => blocks.filter(b => b.day_of_week === day).sort((a, b) => a.start_time.localeCompare(b.start_time))
 
   return (
     <WizardShell week={week} stepTitle="Bloquea tu tiempo" stepNumber={4} stepDescription="Asigna tareas a días. Programa trabajo profundo para tu prioridad #1 primero.">
