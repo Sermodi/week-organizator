@@ -99,13 +99,16 @@ function TaskForm({ priority, weekId, onCreated }: { priority: Priority; weekId:
       {form.action_verb && form.concrete_object && (
         <p className="text-xs text-zinc-400 italic">Vista previa: &quot;<span className="text-zinc-200">{form.action_verb} {form.concrete_object}</span>&quot;</p>
       )}
-      <textarea
-        value={form.victory_condition}
-        onChange={e => setForm(f => ({ ...f, victory_condition: e.target.value }))}
-        placeholder="Listo cuando… (sé específico)"
-        rows={2}
-        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500 resize-none"
-      />
+      <div className="flex items-start gap-2">
+        <span className="text-sm text-zinc-400 mt-2 shrink-0">Listo cuando</span>
+        <textarea
+          value={form.victory_condition}
+          onChange={e => setForm(f => ({ ...f, victory_condition: e.target.value }))}
+          placeholder="sé específico…"
+          rows={2}
+          className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-500 resize-none"
+        />
+      </div>
       {error && <p className="text-red-400 text-xs">{error}</p>}
       <button
         onClick={handleSubmit}
