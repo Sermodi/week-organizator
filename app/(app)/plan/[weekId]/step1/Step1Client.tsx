@@ -97,6 +97,11 @@ export default function Step1Client({ week, items, areas }: Props) {
       </div>
 
       {/* Add item form */}
+      {areas.length === 0 && (
+        <div className="mb-4 p-3 bg-amber-950/40 border border-amber-800/50 rounded-lg text-amber-400 text-sm">
+          Crea al menos un <a href="/areas" className="underline hover:text-amber-300">área</a> antes de añadir elementos.
+        </div>
+      )}
       <form
         ref={formRef}
         action={async (fd) => {
@@ -112,9 +117,22 @@ export default function Step1Client({ week, items, areas }: Props) {
           required
           className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
+        <select
+          name="area_id"
+          required
+          disabled={areas.length === 0}
+          defaultValue=""
+          className="px-2 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 disabled:opacity-40"
+        >
+          <option value="" disabled>Área</option>
+          {areas.map(a => (
+            <option key={a.id} value={a.id}>{a.name}</option>
+          ))}
+        </select>
         <button
           type="submit"
-          className="px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors"
+          disabled={areas.length === 0}
+          className="px-3 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
         </button>
@@ -130,26 +148,22 @@ export default function Step1Client({ week, items, areas }: Props) {
         {items.map(item => (
           <div
             key={item.id}
-            className="flex items-center gap-3 p-3 bg-zinc-900 border border-zinc-800 rounded-lg group"
+            className={cn(
+              'flex items-center gap-3 p-3 bg-zinc-900 rounded-lg group',
+              item.area_id ? 'border border-zinc-800' : 'border border-amber-700/60'
+            )}
           >
             <span className="flex-1 text-sm text-zinc-200">{item.content}</span>
-            {item.area && (
-              <span
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: item.area.color + '40', color: item.area.color }}
-              >
-                {item.area.name}
-              </span>
-            )}
             {areas.length > 0 && (
               <select
                 defaultValue={item.area_id ?? ''}
                 onChange={async (e) => {
                   await updateBrainDumpItemArea(item.id, e.target.value || null, week.id)
                 }}
-                className="opacity-0 group-hover:opacity-100 text-xs bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-zinc-300 transition-opacity"
+                className="text-xs bg-zinc-800 border border-zinc-700 rounded px-1 py-0.5 text-zinc-300"
+                style={item.area ? { color: item.area.color } : undefined}
               >
-                <option value="">Sin área</option>
+                <option value="" disabled>Sin área</option>
                 {areas.map(a => (
                   <option key={a.id} value={a.id}>{a.name}</option>
                 ))}
@@ -173,7 +187,7 @@ export default function Step1Client({ week, items, areas }: Props) {
         </span>
         <button
           onClick={handleContinue}
-          disabled={isPending || items.length === 0}
+          disabled={isPending || items.length === 0 || items.some(i => !i.area_id)}
           className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors"
         >
           Continuar a Priorizar <ChevronRight className="w-4 h-4" />

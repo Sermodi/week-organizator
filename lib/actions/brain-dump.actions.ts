@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 const CreateItemSchema = z.object({
   content: z.string().min(1).max(500),
-  area_id: z.string().uuid().optional().nullable(),
+  area_id: z.string().uuid(),
   week_id: z.string().uuid(),
 })
 
@@ -61,11 +61,12 @@ export async function completeStep1(weekId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Unauthorized' }
 
-  const { count } = await supabase
+  const { data: allItems, count } = await supabase
     .from('brain_dump_items')
-    .select('*', { count: 'exact', head: true })
+    .select('area_id', { count: 'exact' })
     .eq('week_id', weekId)
   if (!count || count < 1) return { error: 'Añade al menos un elemento para continuar.' }
+  if (allItems?.some(i => !i.area_id)) return { error: 'Todos los elementos deben tener un área asignada.' }
 
   const { data: week } = await supabase
     .from('weeks').select('completed_steps').eq('id', weekId).single()
