@@ -1,10 +1,14 @@
 'use client'
 import { useRef, useState, useEffect, useTransition } from 'react'
-import { Plus, Trash2, Timer, ChevronRight } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Plus, Trash2, Timer, ChevronRight, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createBrainDumpItem, deleteBrainDumpItem, updateBrainDumpItemArea, completeStep1 } from '@/lib/actions/brain-dump.actions'
+import { createArea } from '@/lib/actions/area.actions'
 import type { Week, BrainDumpItem, Area } from '@/types'
 import { WizardShell } from '@/components/wizard/WizardShell'
+
+const PRESET_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#64748b']
 
 interface Props {
   week: Week
@@ -13,11 +17,16 @@ interface Props {
 }
 
 export default function Step1Client({ week, items, areas }: Props) {
+  const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
+  const areaFormRef = useRef<HTMLFormElement>(null)
   const [isPending, startTransition] = useTransition()
   const [timerSeconds, setTimerSeconds] = useState<number | null>(null)
   const [timerRunning, setTimerRunning] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showAreaForm, setShowAreaForm] = useState(false)
+  const [newAreaColor, setNewAreaColor] = useState(PRESET_COLORS[0])
+  const [areaError, setAreaError] = useState<string | null>(null)
 
   const TIMER_KEY = `brain-dump-timer-${week.id}`
 
@@ -96,10 +105,75 @@ export default function Step1Client({ week, items, areas }: Props) {
         )}
       </div>
 
+      {/* Inline create area */}
+      <div className="mb-4">
+        {!showAreaForm ? (
+          <button
+            type="button"
+            onClick={() => setShowAreaForm(true)}
+            className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+          >
+            + Nueva área
+          </button>
+        ) : (
+          <form
+            ref={areaFormRef}
+            onSubmit={async (e) => {
+              e.preventDefault()
+              const fd = new FormData(areaFormRef.current!)
+              fd.set('color', newAreaColor)
+              const result = await createArea(undefined, fd)
+              if (result?.error) { setAreaError(result.error); return }
+              setAreaError(null)
+              setShowAreaForm(false)
+              setNewAreaColor(PRESET_COLORS[0])
+              areaFormRef.current?.reset()
+              router.refresh()
+            }}
+            className="flex flex-col gap-2 p-3 bg-zinc-900 border border-zinc-700 rounded-lg"
+          >
+            <div className="flex items-center gap-2">
+              <input
+                name="name"
+                placeholder="Nombre del área"
+                required
+                autoFocus
+                className="flex-1 px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+              />
+              <button
+                type="button"
+                onClick={() => { setShowAreaForm(false); setAreaError(null) }}
+                className="text-zinc-500 hover:text-zinc-300"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {PRESET_COLORS.map(c => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setNewAreaColor(c)}
+                  className={cn('w-5 h-5 rounded-full transition-transform', newAreaColor === c && 'ring-2 ring-white scale-110')}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+              <button
+                type="submit"
+                className="ml-auto text-xs px-2 py-1 bg-violet-600 hover:bg-violet-500 text-white rounded transition-colors"
+              >
+                Crear
+              </button>
+            </div>
+            {areaError && <p className="text-red-400 text-xs">{areaError}</p>}
+          </form>
+        )}
+      </div>
+
       {/* Add item form */}
-      {areas.length === 0 && (
+      {areas.length === 0 && !showAreaForm && (
         <div className="mb-4 p-3 bg-amber-950/40 border border-amber-800/50 rounded-lg text-amber-400 text-sm">
-          Crea al menos un <a href="/areas" className="underline hover:text-amber-300">área</a> antes de añadir elementos.
+          Crea al menos un área antes de añadir elementos.
         </div>
       )}
       <form
