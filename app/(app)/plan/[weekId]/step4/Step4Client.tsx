@@ -88,8 +88,8 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
               <div className="text-xs text-zinc-500 font-medium mb-1 text-center">{day}</div>
               <div className="space-y-1">
                 {dayBlocks.map(block => {
-                  const task = block.task as Task | undefined
-                  const color = task?.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#6366f1'
+                  const task = block.task_id ? tasks.find(t => t.id === block.task_id) : undefined
+                  const color = task?.area?.color ?? (task?.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#6366f1')
                   return (
                     <div key={block.id} className="relative group p-1.5 rounded text-xs" style={{ backgroundColor: color + '20', borderLeft: `2px solid ${color}` }}>
                       <p className="text-zinc-200 truncate leading-tight">{task ? `${task.action_verb} ${task.concrete_object}` : block.label ?? block.block_type}</p>
@@ -121,7 +121,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
           <h3 className="text-xs text-zinc-500 font-medium mb-2 uppercase tracking-wide">Tareas sin programar</h3>
           <div className="flex flex-wrap gap-2">
             {unscheduledTasks.map(task => {
-              const color = task.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#71717a'
+              const color = task.area?.color ?? (task.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#71717a')
               return (
                 <button
                   key={task.id}
@@ -131,6 +131,11 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                 >
                   <Clock className="w-3 h-3" />
                   {task.action_verb} {task.concrete_object}
+                  {task.area && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs" style={{ backgroundColor: color + '33', color }}>
+                      {task.area.name}
+                    </span>
+                  )}
                 </button>
               )
             })}
@@ -153,11 +158,19 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                   {tasks.map(t => <option key={t.id} value={t.id}>{t.action_verb} {t.concrete_object}</option>)}
                 </select>
               )}
-              {adding.taskId && (
-                <p className="text-sm text-zinc-300">
-                  Tarea: <span className="text-white">{tasks.find(t => t.id === adding.taskId)?.action_verb} {tasks.find(t => t.id === adding.taskId)?.concrete_object}</span>
-                </p>
-              )}
+              {adding.taskId && (() => {
+                const t = tasks.find(t => t.id === adding.taskId)
+                return t ? (
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-300">
+                    <span>Tarea: <span className="text-white">{t.action_verb} {t.concrete_object}</span></span>
+                    {t.area && (
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: t.area.color + '33', color: t.area.color }}>
+                        {t.area.name}
+                      </span>
+                    )}
+                  </div>
+                ) : null
+              })()}
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-xs text-zinc-400 mb-1 block">Día</label>
