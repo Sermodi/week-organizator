@@ -143,7 +143,12 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
           const isExpanded = expandedId === priority.id
 
           return (
-            <div key={priority.id} className={cn('border rounded-xl overflow-hidden', PRIORITY_BORDER[priorityLevel], PRIORITY_BG[priorityLevel])}>
+            <div key={priority.id} className={cn(
+              'border rounded-xl overflow-hidden',
+              relatedTasks.length > 0
+                ? 'border-zinc-800 bg-zinc-900/50'
+                : cn(PRIORITY_BORDER[priorityLevel], PRIORITY_BG[priorityLevel])
+            )}>
               <button
                 className="w-full flex items-center gap-3 p-4 text-left"
                 onClick={() => setExpandedId(isExpanded ? null : priority.id)}
