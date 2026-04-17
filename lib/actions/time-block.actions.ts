@@ -22,6 +22,7 @@ export async function createTimeBlock(data: z.infer<typeof CreateBlockSchema>) {
 
   const parsed = CreateBlockSchema.safeParse(data)
   if (!parsed.success) return { error: 'Invalid input' }
+  if (parsed.data.end_time <= parsed.data.start_time) return { error: 'La hora de fin debe ser posterior a la de inicio.' }
 
   const { error } = await supabase.from('time_blocks').insert({ ...parsed.data, user_id: user.id })
   if (error) return { error: error.message }

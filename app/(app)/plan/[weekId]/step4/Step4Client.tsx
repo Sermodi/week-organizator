@@ -201,10 +201,17 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                   <label className="text-xs text-zinc-400 mb-1 block">Inicio</label>
                   <select
                     value={adding.startTime ?? '09:00'}
-                    onChange={e => setAdding(a => ({ ...a, startTime: e.target.value }))}
+                    onChange={e => {
+                      const start = e.target.value
+                      setAdding(a => ({
+                        ...a,
+                        startTime: start,
+                        endTime: (a?.endTime ?? '10:00') > start ? (a?.endTime ?? '10:00') : HOURS[HOURS.indexOf(start) + 1] ?? start,
+                      }))
+                    }}
                     className="w-full px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white"
                   >
-                    {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
+                    {HOURS.slice(0, -1).map(h => <option key={h} value={h}>{h}</option>)}
                   </select>
                 </div>
                 <div>
@@ -214,7 +221,7 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                     onChange={e => setAdding(a => ({ ...a, endTime: e.target.value }))}
                     className="w-full px-2 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-white"
                   >
-                    {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
+                    {HOURS.filter(h => h > (adding.startTime ?? '09:00')).map(h => <option key={h} value={h}>{h}</option>)}
                   </select>
                 </div>
               </div>
