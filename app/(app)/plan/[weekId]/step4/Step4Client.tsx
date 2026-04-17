@@ -37,16 +37,16 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
   const topTask = tasks.find(t => t.priority_level === 'top')
 
   async function handleAddBlock() {
-    if (!adding?.startTime || !adding?.endTime) return
+    if (!adding) return
     startTransition(async () => {
       const result = await createTimeBlock({
         week_id: week.id,
-        task_id: adding?.taskId || null,
-        day_of_week: adding?.day ?? 0,
-        start_time: adding?.startTime ?? '09:00',
-        end_time: adding?.endTime ?? '10:00',
-        block_type: adding?.blockType ?? 'task',
-        label: adding?.label || null,
+        task_id: adding.taskId || null,
+        day_of_week: adding.day ?? 0,
+        start_time: adding.startTime ?? '09:00',
+        end_time: adding.endTime ?? '10:00',
+        block_type: adding.blockType ?? 'task',
+        label: adding.label || null,
       })
       if (result?.error) setError(result.error)
       else setAdding(null)
