@@ -29,6 +29,7 @@ interface AddBlockState {
 
 export default function Step4Client({ week, tasks, blocks }: Props) {
   const [adding, setAdding] = useState<Partial<AddBlockState> | null>(null)
+  const [viewingBlock, setViewingBlock] = useState<TimeBlock | null>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
@@ -91,16 +92,15 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
                   const task = block.task_id ? tasks.find(t => t.id === block.task_id) : undefined
                   const color = task?.area?.color ?? (task?.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#6366f1')
                   return (
-                    <div key={block.id} className="relative group p-1.5 rounded text-xs" style={{ backgroundColor: color + '20', borderLeft: `2px solid ${color}` }}>
+                    <button
+                      key={block.id}
+                      onClick={() => setViewingBlock(block)}
+                      className="w-full text-left p-1.5 rounded text-xs hover:brightness-125 transition-all"
+                      style={{ backgroundColor: color + '20', borderLeft: `2px solid ${color}` }}
+                    >
                       <p className="text-zinc-200 truncate leading-tight">{task ? `${task.action_verb} ${task.concrete_object}` : block.label ?? block.block_type}</p>
                       <p className="text-zinc-500">{block.start_time.slice(0, 5)}–{block.end_time.slice(0, 5)}</p>
-                      <button
-                        onClick={async () => { await deleteTimeBlock(block.id, week.id) }}
-                        className="absolute top-0.5 right-0.5 opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
+                    </button>
                   )
                 })}
                 <button
@@ -142,6 +142,52 @@ export default function Step4Client({ week, tasks, blocks }: Props) {
           </div>
         </div>
       )}
+
+      {/* Block detail modal */}
+      {viewingBlock && (() => {
+        const task = viewingBlock.task_id ? tasks.find(t => t.id === viewingBlock.task_id) : undefined
+        const color = task?.area?.color ?? (task?.priority_level ? PRIORITY_COLORS[task.priority_level as PriorityLevel] : '#6366f1')
+        return (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <p className="text-white font-medium text-sm">
+                    {task ? `${task.action_verb} ${task.concrete_object}` : viewingBlock.label ?? viewingBlock.block_type}
+                  </p>
+                  {task?.area && (
+                    <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: color + '33', color }}>
+                      {task.area.name}
+                    </span>
+                  )}
+                </div>
+                <button onClick={() => setViewingBlock(null)} className="text-zinc-500 hover:text-zinc-300 shrink-0">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {task?.victory_condition && (
+                <p className="text-xs text-zinc-400">
+                  <span className="text-zinc-500">Listo cuando </span>{task.victory_condition}
+                </p>
+              )}
+              <p className="text-xs text-zinc-500">
+                {DAY_NAMES[viewingBlock.day_of_week]} · {viewingBlock.start_time.slice(0, 5)}–{viewingBlock.end_time.slice(0, 5)}
+              </p>
+              <div className="flex justify-end">
+                <button
+                  onClick={async () => {
+                    await deleteTimeBlock(viewingBlock.id, week.id)
+                    setViewingBlock(null)
+                  }}
+                  className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Eliminar bloque
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Add block modal/form */}
       {adding !== null && (
