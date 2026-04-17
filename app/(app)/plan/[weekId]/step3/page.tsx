@@ -13,7 +13,7 @@ export default async function Step3Page({ params }: { params: Promise<{ weekId: 
 
   const { data: priorities } = await supabase
     .from('priorities')
-    .select('*')
+    .select('*, area:areas(*)')
     .eq('week_id', weekId)
     .in('classification', ['top_priority', 'essential'])
     .order('is_number_one', { ascending: false })

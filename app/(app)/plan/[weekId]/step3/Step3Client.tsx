@@ -155,9 +155,17 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
               >
                 <div className="w-1 h-10 rounded-full shrink-0" style={{ backgroundColor: color }} />
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     {priority.is_number_one && <span className="text-xs text-yellow-400 font-medium">⭐ #1</span>}
                     <span className="text-sm font-medium text-zinc-200">{priority.title}</span>
+                    {priority.area && (
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: priority.area.color + '33', color: priority.area.color }}
+                      >
+                        {priority.area.name}
+                      </span>
+                    )}
                   </div>
                   <span className="text-xs text-zinc-500">{relatedTasks.length} tarea{relatedTasks.length !== 1 ? 's' : ''} definida{relatedTasks.length !== 1 ? 's' : ''}</span>
                 </div>
@@ -169,7 +177,17 @@ export default function Step3Client({ week, priorities, tasks, areas }: Props) {
                   {relatedTasks.map(task => (
                     <div key={task.id} className="flex items-start gap-2 py-2 border-t border-zinc-800/50">
                       <div className="flex-1">
-                        <p className="text-sm text-zinc-200 font-medium">{task.action_verb} {task.concrete_object}</p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm text-zinc-200 font-medium">{task.action_verb} {task.concrete_object}</p>
+                          {task.area && (
+                            <span
+                              className="text-xs px-2 py-0.5 rounded-full"
+                              style={{ backgroundColor: task.area.color + '33', color: task.area.color }}
+                            >
+                              {task.area.name}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-zinc-500 mt-0.5">Listo cuando: {task.victory_condition}</p>
                       </div>
                       <button
